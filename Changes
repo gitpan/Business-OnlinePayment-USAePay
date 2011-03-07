@@ -1,0 +1,8 @@
+Revision history for Perl extension Business::OnlinePayment::USAePay.
+
+0.02    Sun Mar  6 15:54:24 PST 2011
+        - test fixes, documentation updates, otherwise functionally unchanged
+
+0.01    Fri Nov 24 2006
+        - Initial version 
+
