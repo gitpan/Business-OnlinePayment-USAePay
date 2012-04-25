@@ -4,7 +4,7 @@
 use Test;
 require "t/lib/test_account.pl";
 
-BEGIN { plan tests => 391, todo => [361,376,382,383,388,389] };
+BEGIN { plan tests => 404 };
 use Business::OnlinePayment::USAePay;
 
 my %auth = test_account();
@@ -803,7 +803,7 @@ ok($tx->server_response->{UMrefNum}, qr/^\d+/);
 ok($tx->server_response->{UMerrorcode}, "10127");
 ok($tx->server_response->{UMbatch}, qr/^\d+/);
 ok($tx->server_response->{UMvpasResultCode}, "");
-ok($tx->server_response->{UMcvv2ResultCode}, "P");
+ok($tx->server_response->{UMcvv2ResultCode}, "N");
 
 # referral
 ok(
@@ -835,9 +835,9 @@ ok($tx->server_response->{UMrefNum}, qr/^\d+/);
 ok($tx->server_response->{UMerrorcode}, "00043");
 ok($tx->server_response->{UMbatch}, qr/^\d+/);
 ok($tx->server_response->{UMvpasResultCode}, "");
-ok($tx->server_response->{UMcvv2ResultCode}, "P");
+ok($tx->server_response->{UMcvv2ResultCode}, "N");
 
-# check
+# good check
 ok(
     $tx->content(
         type           => 'ECHECK',
@@ -857,15 +857,44 @@ ok($tx->submit());
 ok($tx->is_success());
 ok($tx->error_message(), ''); #'Approved');
 ok($tx->authorization(), '/^\w{6}/'); #\d{6}/');
-ok($tx->server_response->{UMavsResultCode}, "YYY");
-ok($tx->server_response->{UMresult}, "E");
+ok($tx->server_response->{UMavsResultCode}, "");
+ok($tx->server_response->{UMresult}, "A"); #good check
 ok($tx->server_response->{UMcvv2Result}, "No CVV2/CVC data available for transaction.");
 ok($tx->server_response->{UMversion}, "2.9");
 ok($tx->server_response->{UMavsResult}, "No AVS response (Typically no AVS data sent or swiped transaction)"); #"n/a");
 ok($tx->server_response->{UMrefNum}, qr/^\d+/);
-ok($tx->server_response->{UMerrorcode}, "00011");
-ok($tx->server_response->{UMbatch}, qr/^\d+/);
+ok($tx->server_response->{UMerrorcode}, "00000");
 ok($tx->server_response->{UMvpasResultCode}, "");
 ok($tx->server_response->{UMcvv2ResultCode}, "");
 
+
+# bad check
+ok(
+    $tx->content(
+        type           => 'ECHECK',
+        %auth,
+        action         => 'Normal Authorization',
+        description    => 'Business::OnlinePayment test',
+        amount         => '5.99', #5.99 	Decline 
+        invoice_number => '100100',
+        name           => 'Tofu Beast',
+        routing_code   => '400020001',
+        account_number => '1112222',
+        customer_ssn   => '999999999',
+        address        => '1234 Bean Curd Lane, San Francisco',
+    )
+);
+ok($tx->submit());
+ok($tx->is_success(),0); #393
+ok($tx->error_message(), 'VC: Returned check for this account'); 
+ok($tx->authorization(), '/^\w{6}/'); #\d{6}/');
+ok($tx->server_response->{UMavsResultCode}, "");
+ok($tx->server_response->{UMresult}, "D"); #bad check
+ok($tx->server_response->{UMcvv2Result}, "No CVV2/CVC data available for transaction.");
+ok($tx->server_response->{UMversion}, "2.9");
+ok($tx->server_response->{UMavsResult}, "No AVS response (Typically no AVS data sent or swiped transaction)"); #"n/a");
+ok($tx->server_response->{UMrefNum}, qr/^\d+/);
+ok($tx->server_response->{UMerrorcode}, "00000");
+ok($tx->server_response->{UMvpasResultCode}, "");
+ok($tx->server_response->{UMcvv2ResultCode}, "");
 

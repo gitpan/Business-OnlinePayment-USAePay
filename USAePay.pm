@@ -9,7 +9,7 @@ use URI::Escape;
 use vars qw($VERSION @ISA $DEBUG);
 
 @ISA = qw(Business::OnlinePayment::HTTPS);
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 $DEBUG = 0;
 
@@ -243,17 +243,17 @@ For detailed information see L<Business::OnlinePayment>.
 
 This module was developed against USAePay's CGI Gateway API v2.9.5 and
 also tested against v2.17.1 without problems.  See
-http://www.usaepay.com/topics/api.html for details.
+http://wiki.usaepay.com/developer/transactionapi for details.
 
 =head1 AUTHOR
 
 Original author: Jeff Finucane <jeff@cmh.net>
 
-0.02 update and current maintainer: Ivan Kohler <ivan-usaepay@freeside.biz>
+Current maintainer: Ivan Kohler <ivan-usaepay@freeside.biz>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright (C) 2011 Freeside Internet Services, Inc. (http://freeside.biz/)
+Copyright (C) 2012 Freeside Internet Services, Inc. (http://freeside.biz/)
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
@@ -262,9 +262,8 @@ under the same terms as Perl itself.
 
 Need a complete, open-source back-office and customer self-service solution?
 The Freeside software includes support for credit card and electronic check
-processing with USAePay and over 50 other gateways, invoicing, credit card and
-electronic check processing, integrated trouble ticketing, and customer signup
-and self-service web interfaces.
+processing with USAePay and over 50 other gateways, invoicing, integrated
+trouble ticketing, and customer signup and self-service web interfaces.
 
 http://freeside.biz/freeside/
 
